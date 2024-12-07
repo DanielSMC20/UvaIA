@@ -29,7 +29,7 @@ function App() {
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    if (file && file.type.startsWith("image/")) {
+    if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
@@ -39,13 +39,13 @@ function App() {
       };
     } else {
       setShowAlert(true);
-      console.error("Por favor, seleccione un archivo de imagen.");
+      console.error("Por favor, seleccione un archivo de imagen JPG o PNG.");
     }
   };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: "image/*",
+    accept: "image/jpeg, image/png",
   });
 
   const handleScanClick = async () => {
@@ -139,10 +139,7 @@ function App() {
           {scanResult && (
             <>
               <div className="w-full p-4">
-                <ScanResult
-                  imageUrl={imageUrl}
-                  data={scanResult}
-                />
+                <ScanResult imageUrl={imageUrl} data={scanResult} />
               </div>
             </>
           )}
@@ -160,7 +157,7 @@ function App() {
       </Modal>
       {showAlert && (
         <AlertPopup
-          message="Por favor, seleccione un archivo de imagen."
+          message="Por favor, seleccione un archivo de imagen JPG o PNG."
           onClose={() => setShowAlert(false)}
         />
       )}
