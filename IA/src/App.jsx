@@ -4,6 +4,7 @@ import { Button } from "primereact/button";
 import Modal from "react-modal";
 import ScanResult from "../src/Components/Result";
 import AlertPopup from "../src/Components/AlertComponent";
+import NoLeafComponent from "../src/Components/NoLeafComponent";
 import "./App.css";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
@@ -18,6 +19,8 @@ function App() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
+  const [showNoLeaf, setShowNoLeaf] = useState(false);
+  const [noLeafData, setNoLeafData] = useState(null);
   const [shake, setShake] = useState(false);
 
   const handleButtonClick = () => {
@@ -29,7 +32,7 @@ function App() {
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0];
-    if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
+    if (file && file.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
@@ -39,13 +42,13 @@ function App() {
       };
     } else {
       setShowAlert(true);
-      console.error("Por favor, seleccione un archivo de imagen JPG o PNG.");
+      console.error("Por favor, seleccione un archivo de imagen.");
     }
   };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: "image/jpeg, image/png",
+    accept: "image/*",
   });
 
   const handleScanClick = async () => {
@@ -66,8 +69,13 @@ function App() {
       if (response.ok) {
         const result = await response.json();
         console.log("Resultado del escaneo:", result);
-        setScanResult(result);
-        setModalIsOpen(true);
+        if (result.class === "No Son Hojas") {
+          setNoLeafData(result);
+          setShowNoLeaf(true);
+        } else {
+          setScanResult(result);
+          setModalIsOpen(true);
+        }
       } else {
         console.error("Error en el escaneo");
       }
@@ -78,6 +86,11 @@ function App() {
 
   const handleCloseModal = () => {
     setModalIsOpen(false);
+    window.location.reload();
+  };
+
+  const handleCloseNoLeaf = () => {
+    setShowNoLeaf(false);
     window.location.reload();
   };
 
@@ -139,7 +152,10 @@ function App() {
           {scanResult && (
             <>
               <div className="w-full p-4">
-                <ScanResult imageUrl={imageUrl} data={scanResult} />
+                <ScanResult
+                  imageUrl={imageUrl}
+                  data={scanResult}
+                />
               </div>
             </>
           )}
@@ -157,8 +173,14 @@ function App() {
       </Modal>
       {showAlert && (
         <AlertPopup
-          message="Por favor, seleccione un archivo de imagen JPG o PNG."
+          message="Por favor, seleccione un archivo de imagen."
           onClose={() => setShowAlert(false)}
+        />
+      )}
+      {showNoLeaf && (
+        <NoLeafComponent
+          data={noLeafData}
+          onClose={handleCloseNoLeaf}
         />
       )}
     </div>

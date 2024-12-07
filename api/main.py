@@ -17,14 +17,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-MODEL = tf.keras.models.load_model("../modelo/2.keras")
-CLASS_NAMES = ["Grape Black Measles", "Grape Black rot", "Grape Healthy", "Grape Isariopsis Leaf Spot"]
+MODEL = tf.keras.models.load_model("../modelo/4.keras")
+CLASS_NAMES = ["Grape Black Measles", "Grape Black rot", "Grape Healthy", "Grape Isariopsis Leaf Spot", "No Son Hojas"]
 
 SUGGESTIONS = {
     "Grape Black Measles": ["Para tratar el Black Measles en uvas, elimina el material infectado, aplica fungicidas adecuados, y mejora el drenaje y la circulación de aire con una poda adecuada. Monitorea las plantas regularmente y considera el uso de variedades resistentes. Un enfoque integrado ayudará a mantener la salud del viñedo."],
     "Grape Black rot": ["Para controlar la podredumbre negra en las uvas, retira y destruye los racimos infectados, aplica fungicidas apropiados, y asegúrate de que haya buena circulación de aire y drenaje en el viñedo. Monitorea las plantas con regularidad y elige variedades resistentes. Un enfoque integrado combinará estas estrategias para proteger la salud del viñedo."],
     "Grape Healthy": ["¡Felicidades! Tu esfuerzo y dedicación han dado sus frutos: ¡la planta está sana y fuerte! Este es el resultado de un cuidado constante y un manejo atento. Sigue así y disfrutarás de una cosecha abundante y saludable. ¡Sigue cultivando con amor y pasión!"],
-    "Grape Isariopsis Leaf Spot": ["Para controlar la mancha foliar de Isariopsis en uvas, retira las hojas infectadas, aplica fungicidas específicos y mejora la circulación de aire con poda adecuada. Monitorea regularmente y elige variedades resistentes para mantener las plantas saludables."]
+    "Grape Isariopsis Leaf Spot": ["Para controlar la mancha foliar de Isariopsis en uvas, retira las hojas infectadas, aplica fungicidas específicos y mejora la circulación de aire con poda adecuada. Monitorea regularmente y elige variedades resistentes para mantener las plantas saludables."],
+    "No Son Hojas": ["La imagen proporcionada no es una hoja. Por favor, proporciona una imagen de una hoja para obtener una predicción precisa. ¡Recuerda, una buena imagen es clave para un diagnóstico correcto!"]
 }
 
 @app.get("/ping")
